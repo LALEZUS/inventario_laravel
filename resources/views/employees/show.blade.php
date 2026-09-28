@@ -9,35 +9,42 @@
         @can('delete', $employee)<form method="POST" action="{{ route('employees.destroy', $employee) }}" onsubmit="return confirm('Eliminar este empleado? Los activos conservaran su nombre como referencia historica.');">@csrf @method('DELETE')<button class="button button-danger">Eliminar</button></form>@endcan
     </div>
 </div>
-<section class="asset-header">
+<section class="employee-profile-hero">
     <div class="asset-icon">{{ collect(explode(' ', $employee->full_name))->filter()->take(2)->map(fn ($word) => mb_strtoupper(mb_substr($word, 0, 1)))->join('') }}</div>
-    <div class="asset-heading"><p class="eyebrow">Employee profile</p><h2>{{ $employee->full_name }}</h2><p>{{ $employee->position ?: 'Sin puesto' }} &middot; {{ $employee->department ?: 'Sin departamento' }}</p></div>
-    <span class="status large {{ $employee->status === 'Inactivo' ? 'status-muted' : '' }}">{{ $employee->status }}</span>
+    <div class="asset-heading"><p class="eyebrow">Perfil del empleado</p><h2>{{ $employee->full_name }}</h2><p>{{ $employee->position ?: 'Sin puesto' }} <span aria-hidden="true">&middot;</span> {{ $employee->department ?: 'Sin departamento' }}</p></div>
+    <div class="employee-hero-meta"><span class="status {{ $employee->status === 'Inactivo' ? 'status-muted' : '' }}">{{ $employee->status }}</span><small>Ultima actualizacion · {{ $employee->updated_at?->translatedFormat('d M Y, H:i') }}</small></div>
 </section>
-<section class="asset-tools-grid employee-contact-tools">
-    <article class="asset-tool-card qr-tool-card">
-        <div>
-            <p class="eyebrow">Contacto rapido</p>
-            <h2>QR del empleado</h2>
-            <p>Escanea este codigo para guardar el contacto con su nombre, celular y correo.</p>
-        </div>
-        <img src="{{ $employeeQr }}" alt="Codigo QR de contacto de {{ $employee->full_name }}" width="180" height="180">
-    </article>
-</section>
-<section class="detail-grid">
-    @foreach([
-        'Departamento' => $employee->department,
-        'Puesto' => $employee->position,
-        'Correo corporativo' => $employee->email_corporate,
-        'Numero de celular' => $employee->phone_number,
-        'Extension' => $employee->extension,
-        'Computadoras' => $employee->hardwareAssets->count(),
-        'Celulares' => $employee->cellphones->count(),
-        'Perifericos' => $employee->peripherals->count(),
-        'Impresoras' => $employee->printers->count(),
-        'Correos Outlook' => $employee->outlookAccounts->count(),
-        'Actualizado' => $employee->updated_at?->format('d/m/Y H:i'),
-    ] as $label => $value)<article><span>{{ $label }}</span><strong>{{ filled($value) ? $value : '-' }}</strong></article>@endforeach
+@php
+    $contactText = collect([
+        $employee->full_name,
+        $employee->phone_number ? 'Celular: '.$employee->phone_number : null,
+        $employee->extension ? 'Extension: '.$employee->extension : null,
+        $employee->email_corporate,
+    ])->filter()->implode("\n");
+    $inventorySummary = [
+        ['label' => 'Computadoras', 'count' => $employee->hardwareAssets->count(), 'icon' => 'bi-laptop'],
+        ['label' => 'Celulares', 'count' => $employee->cellphones->count(), 'icon' => 'bi-phone'],
+        ['label' => 'Perifericos', 'count' => $employee->peripherals->count(), 'icon' => 'bi-mouse'],
+        ['label' => 'Impresoras', 'count' => $employee->printers->count(), 'icon' => 'bi-printer'],
+        ['label' => 'Correos Outlook', 'count' => $employee->outlookAccounts->count(), 'icon' => 'bi-envelope'],
+    ];
+@endphp
+<section class="employee-overview-grid">
+    <div class="employee-primary-column">
+        <section class="employee-section employee-contact-section">
+            <div class="employee-section-heading"><div><p class="eyebrow">Contacto</p><h2>Como localizarlo</h2></div><button class="button button-secondary button-small" type="button" onclick="navigator.clipboard.writeText({{ \Illuminate\Support\Js::from($contactText) }}); this.innerHTML='<i class=\"bi bi-check2\"></i> Copiado'; setTimeout(() => this.innerHTML='<i class=\"bi bi-copy\"></i> Copiar contacto', 1600);"><i class="bi bi-copy" aria-hidden="true"></i> Copiar contacto</button></div>
+            <div class="employee-contact-list">
+                <div><i class="bi bi-envelope" aria-hidden="true"></i><span>Correo corporativo</span><strong>{{ $employee->email_corporate ?: 'No registrado' }}</strong></div>
+                <div><i class="bi bi-phone" aria-hidden="true"></i><span>Numero de celular</span><strong>{{ $employee->phone_number ?: 'No registrado' }}</strong></div>
+                <div><i class="bi bi-telephone" aria-hidden="true"></i><span>Extension</span><strong>{{ $employee->extension ?: 'No registrada' }}</strong></div>
+            </div>
+        </section>
+        <section class="employee-section employee-inventory-section">
+            <div class="employee-section-heading"><div><p class="eyebrow">Inventario asignado</p><h2>Recursos a su cargo</h2></div><strong class="employee-total-assets">{{ collect($inventorySummary)->sum('count') }}</strong></div>
+            <div class="employee-inventory-summary">@foreach($inventorySummary as $item)<div class="employee-inventory-item {{ $item['count'] > 0 ? 'has-items' : '' }}"><i class="bi {{ $item['icon'] }}" aria-hidden="true"></i><strong>{{ $item['count'] }}</strong><span>{{ $item['label'] }}</span></div>@endforeach</div>
+        </section>
+    </div>
+    <aside class="employee-qr-panel"><div><p class="eyebrow">Contacto rapido</p><h2>Compartir contacto</h2><p>Escanea para guardar los datos de {{ $employee->full_name }}.</p></div><img src="{{ $employeeQr }}" alt="Codigo QR de contacto de {{ $employee->full_name }}" width="150" height="150"></aside>
 </section>
 @if($employee->comments)<section class="panel"><div class="panel-header"><div><p class="eyebrow">Seguimiento</p><h2>Comentarios</h2></div></div><p>{{ $employee->comments }}</p></section>@endif
 <section class="panel">
