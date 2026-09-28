@@ -33,11 +33,53 @@ class EmployeeQrCode
             roundBlockSizeMode: RoundBlockSizeMode::Margin,
         );
 
-        return 'data:image/png;base64,'.base64_encode((new PngWriter())->write($qrCode)->getString());
+        return 'data:image/png;base64,'.base64_encode($this->cropWhiteMargin((new PngWriter())->write($qrCode)->getString()));
     }
 
     private function escape(string $value): string
     {
         return str_replace(['\\', ';', ',', "\n"], ['\\\\', '\\;', '\\,', '\\n'], trim($value));
+    }
+
+    private function cropWhiteMargin(string $png): string
+    {
+        $source = imagecreatefromstring($png);
+        if ($source === false) {
+            return $png;
+        }
+
+        $width = imagesx($source);
+        $height = imagesy($source);
+        $left = $width;
+        $top = $height;
+        $right = -1;
+        $bottom = -1;
+
+        for ($y = 0; $y < $height; $y++) {
+            for ($x = 0; $x < $width; $x++) {
+                $rgb = imagecolorat($source, $x, $y);
+                if ((($rgb >> 16) & 0xff) < 245 || (($rgb >> 8) & 0xff) < 245 || ($rgb & 0xff) < 245) {
+                    $left = min($left, $x);
+                    $top = min($top, $y);
+                    $right = max($right, $x);
+                    $bottom = max($bottom, $y);
+                }
+            }
+        }
+
+        if ($right < $left || $bottom < $top) {
+            imagedestroy($source);
+            return $png;
+        }
+
+        $cropped = imagecreatetruecolor($right - $left + 1, $bottom - $top + 1);
+        imagecopy($cropped, $source, 0, 0, $left, $top, imagesx($cropped), imagesy($cropped));
+        ob_start();
+        imagepng($cropped);
+        $result = (string) ob_get_clean();
+        imagedestroy($cropped);
+        imagedestroy($source);
+
+        return $result;
     }
 }
