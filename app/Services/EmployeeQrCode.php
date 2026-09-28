@@ -7,6 +7,7 @@ use Endroid\QrCode\Encoding\Encoding;
 use Endroid\QrCode\ErrorCorrectionLevel;
 use Endroid\QrCode\QrCode;
 use Endroid\QrCode\RoundBlockSizeMode;
+use Endroid\QrCode\Logo\Logo;
 use Endroid\QrCode\Writer\PngWriter;
 
 class EmployeeQrCode
@@ -33,7 +34,11 @@ class EmployeeQrCode
             roundBlockSizeMode: RoundBlockSizeMode::Margin,
         );
 
-        return 'data:image/png;base64,'.base64_encode($this->cropWhiteMargin((new PngWriter())->write($qrCode)->getString()));
+        $logoPath = public_path('images/rayito_n.png');
+        $logo = is_file($logoPath) ? new Logo($logoPath, 62, 62) : null;
+        $png = (new PngWriter())->write($qrCode, $logo)->getString();
+
+        return 'data:image/png;base64,'.base64_encode($this->cropWhiteMargin($png));
     }
 
     private function escape(string $value): string
