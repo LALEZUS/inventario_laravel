@@ -1,0 +1,1 @@
+@extends('layouts.app') @section('title','Editar red') @section('page-title','Editar red empresarial') @section('content')<a class="back-link" href="{{ route('enterprise-networks.show',$enterpriseNetwork) }}">&larr; Volver al detalle</a>@include('network.enterprise._form')@endsection

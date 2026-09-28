@@ -1,0 +1,1 @@
+@extends('layouts.app') @section('title','Nueva red') @section('page-title','Nueva red empresarial') @section('content')<a class="back-link" href="{{ route('network.index',['type'=>'networks']) }}">&larr; Volver a red</a>@include('network.enterprise._form')@endsection

@@ -1,0 +1,11 @@
+@extends('layouts.app')
+@section('title',$peripheral->name) @section('page-title','Detalle de periferico')
+@section('content')
+<div class="detail-toolbar"><a class="back-link" href="{{ route('peripherals.index') }}">&larr; Volver a perifericos</a><div class="page-actions">@can('update',$peripheral)<a class="button button-primary" href="{{ route('peripherals.edit',$peripheral) }}">Editar periferico</a>@endcan @can('delete',$peripheral)<form method="POST" action="{{ route('peripherals.destroy',$peripheral) }}" onsubmit="return confirm('¿Eliminar este periferico?');">@csrf @method('DELETE')<button class="button button-danger">Eliminar</button></form>@endcan</div></div>
+<section class="asset-header"><div class="asset-icon">PER</div><div class="asset-heading"><p class="eyebrow">Peripheral asset</p><h2>{{ $peripheral->name }}</h2><p>{{ $peripheral->brand ?: 'Sin marca' }} · {{ $peripheral->model ?: 'Sin modelo' }}</p></div><span class="status large">{{ $peripheral->status }}</span></section>
+<section class="detail-grid">@foreach(['Categoria'=>$peripheral->category,'Folio'=>$peripheral->code,'Serie'=>$peripheral->serial,'Cantidad'=>$peripheral->quantity,'Ubicacion'=>$peripheral->location,'Asignado a'=>$peripheral->assigned_name,'Creado'=>$peripheral->created_at?->format('d/m/Y H:i'),'Actualizado'=>$peripheral->updated_at?->format('d/m/Y H:i')] as $label=>$value)<article><span>{{ $label }}</span><strong>{{ $value ?: '-' }}</strong></article>@endforeach</section>
+<section class="panel relation-panel"><div class="panel-header"><div><p class="eyebrow">Relacion de activos</p><h2>Computadora vinculada</h2></div></div>@if($peripheral->computer)<a class="linked-asset" href="{{ route('computers.show',$peripheral->computer) }}"><span>PC</span><div><strong>{{ $peripheral->computer->name }}</strong><small>{{ $peripheral->computer->assigned_to ?: 'Sin usuario' }} · {{ $peripheral->computer->code ?: 'Sin folio' }}</small></div><b>Ver computadora</b></a>@else<p class="empty">Este periferico no esta vinculado a una computadora.</p>@endif</section>
+@if($peripheral->comments)<section class="panel"><div class="panel-header"><div><p class="eyebrow">Seguimiento</p><h2>Comentarios</h2></div></div><p>{{ $peripheral->comments }}</p></section>@endif
+@include('shared.files',['asset'=>$peripheral,'assetType'=>'peripheral'])
+@include('shared.audit')
+@endsection

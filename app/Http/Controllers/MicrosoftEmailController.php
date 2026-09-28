@@ -1,0 +1,13 @@
+<?php
+namespace App\Http\Controllers;
+use App\Http\Requests\MicrosoftEmailRequest; use App\Models\AuditLog; use App\Models\MicrosoftEmail; use App\Services\AuditLogger; use Illuminate\Http\RedirectResponse; use Illuminate\Support\Facades\DB; use Illuminate\View\View;
+class MicrosoftEmailController extends Controller
+{
+    public function create(): View {$this->authorize('create',MicrosoftEmail::class);return view('emails.account-form',['account'=>new MicrosoftEmail,'kind'=>'Microsoft 365','routePrefix'=>'microsoft-emails','hasAdmin'=>true]);}
+    public function store(MicrosoftEmailRequest $r,AuditLogger $a): RedirectResponse {$m=DB::transaction(function()use($r,$a){$m=MicrosoftEmail::create($r->validated());$a->record('create','microsoft_emails',$m->id,null,$m->getAttributes());return $m;});return redirect()->route('microsoft-emails.show',$m)->with('success','Cuenta Microsoft 365 registrada.');}
+    public function show(MicrosoftEmail $microsoftEmail): View {$this->authorize('view',$microsoftEmail);$auditLogs=$this->logs($microsoftEmail);return view('emails.account-show',['account'=>$microsoftEmail,'auditLogs'=>$auditLogs,'kind'=>'Microsoft 365','routePrefix'=>'microsoft-emails','type'=>'microsoft','hasAdmin'=>true]);}
+    public function edit(MicrosoftEmail $microsoftEmail): View {$this->authorize('update',$microsoftEmail);return view('emails.account-form',['account'=>$microsoftEmail,'kind'=>'Microsoft 365','routePrefix'=>'microsoft-emails','hasAdmin'=>true]);}
+    public function update(MicrosoftEmailRequest $r,MicrosoftEmail $microsoftEmail,AuditLogger $a): RedirectResponse {$before=$microsoftEmail->getAttributes();$data=$r->validated();if(blank($data['password']??null))unset($data['password']);DB::transaction(function()use($microsoftEmail,$data,$before,$a){$microsoftEmail->update($data);$a->record('update','microsoft_emails',$microsoftEmail->id,$before,$microsoftEmail->fresh()->getAttributes());});return redirect()->route('microsoft-emails.show',$microsoftEmail)->with('success','Cuenta actualizada.');}
+    public function destroy(MicrosoftEmail $microsoftEmail,AuditLogger $a): RedirectResponse {$this->authorize('delete',$microsoftEmail);$before=$microsoftEmail->getAttributes();DB::transaction(function()use($microsoftEmail,$before,$a){$microsoftEmail->delete();$a->record('delete','microsoft_emails',$microsoftEmail->id,$before,null);});return redirect()->route('emails.index',['type'=>'microsoft'])->with('success','Cuenta eliminada.');}
+    private function logs(MicrosoftEmail $m){return request()->user()->can('viewAudit',$m)?AuditLog::where('entity','microsoft_emails')->where('entity_id',(string)$m->id)->latest()->limit(20)->get():collect();}
+}

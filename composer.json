@@ -7,14 +7,24 @@
     "license": "MIT",
     "require": {
         "php": "^8.2",
+        "barryvdh/laravel-dompdf": "^3.1",
+        "endroid/qr-code": "^6.0",
         "laravel/framework": "^12.0",
-        "laravel/tinker": "^2.10.1"
+        "laravel/sanctum": "^4.0",
+        "laravel/tinker": "^2.10.1",
+        "predis/predis": "3.0",
+        "sentry/sentry-laravel": "4.27",
+        "setasign/fpdf": "^1.8.6",
+        "setasign/fpdi": "^2.6",
+        "symfony/options-resolver": "7.4",
+        "symfony/psr-http-message-bridge": "7.4"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",
         "laravel/pail": "^1.2.2",
         "laravel/pint": "^1.24",
         "laravel/sail": "^1.41",
+        "laravel/telescope": "5.22",
         "mockery/mockery": "^1.6",
         "nunomaduro/collision": "^8.6",
         "phpunit/phpunit": "^11.5.50"

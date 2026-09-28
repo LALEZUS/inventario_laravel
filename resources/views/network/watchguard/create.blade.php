@@ -1,0 +1,1 @@
+@extends('layouts.app') @section('title','Nuevo usuario WatchGuard') @section('page-title','Nuevo usuario WatchGuard') @section('content')<a class="back-link" href="{{ route('network.index',['type'=>'watchguard']) }}">&larr; Volver a red</a>@include('network.watchguard._form')@endsection

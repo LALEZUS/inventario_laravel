@@ -1,0 +1,1 @@
+@extends('layouts.app') @section('title','Nuevo periferico') @section('page-title','Nuevo periferico') @section('content')<a class="back-link" href="{{ route('peripherals.index') }}">&larr; Volver a perifericos</a>@include('peripherals._form')@endsection

@@ -1,0 +1,1 @@
+@extends('layouts.app') @section('title','Editar empleado') @section('page-title','Editar empleado') @section('content')<a class="back-link" href="{{ route('employees.show',$employee) }}">&larr; Volver al detalle</a>@include('employees._form')@endsection

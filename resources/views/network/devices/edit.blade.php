@@ -1,0 +1,1 @@
+@extends('layouts.app') @section('title','Editar dispositivo') @section('page-title','Editar dispositivo de red') @section('content')<a class="back-link" href="{{ route('network-devices.show',$networkDevice) }}">&larr; Volver al detalle</a>@include('network.devices._form')@endsection

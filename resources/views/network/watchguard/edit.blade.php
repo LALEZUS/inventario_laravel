@@ -1,0 +1,1 @@
+@extends('layouts.app') @section('title','Editar WatchGuard') @section('page-title','Editar usuario WatchGuard') @section('content')<a class="back-link" href="{{ route('watchguard-users.show',$watchguardUser) }}">&larr; Volver al detalle</a>@include('network.watchguard._form')@endsection

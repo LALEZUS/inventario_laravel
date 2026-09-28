@@ -1,0 +1,1 @@
+@extends('layouts.app') @section('title','Nuevo dispositivo') @section('page-title','Nuevo dispositivo de red') @section('content')<a class="back-link" href="{{ route('network.index') }}">&larr; Volver a red</a>@include('network.devices._form')@endsection

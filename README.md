@@ -1,59 +1,79 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Inventario Total Ground - Migracion Laravel
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Migracion progresiva del inventario existente a Laravel 12.
 
-## About Laravel
+## Seguridad de la migracion
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+- El inventario actual permanece en `C:\xampp\htdocs\inventario`.
+- Laravel usa la base aislada `inventario_laravel`.
+- El respaldo inicial esta en `storage/app/migration-backups/inventario_baseline_20260814.sql`.
+- Altas, edicion y eliminacion operan solamente sobre la copia `inventario_laravel`.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Requisitos locales
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+- Apache y MySQL de XAMPP activos.
+- PHP 8.2 o superior.
+- Composer 2.
 
-## Learning Laravel
+## Iniciar el proyecto
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+```powershell
+cd C:\xampp\htdocs\inventario-laravel
+C:\xampp\php\php.exe artisan serve --host=0.0.0.0 --port=8001
+```
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+Abre `http://localhost:8001` e inicia sesion con un usuario existente del inventario.
 
-## Laravel Sponsors
+## Pruebas
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+```powershell
+cd C:\xampp\htdocs\inventario-laravel
+C:\xampp\php\php.exe artisan test
+```
 
-### Premium Partners
+## Funciones migradas
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+- Autenticacion con la tabla `users` existente.
+- Sesiones protegidas y limite de intentos de acceso.
+- Dashboard con indicadores reales de la copia.
+- Listado paginado y busqueda de computadoras.
+- Perfil de computadora con especificaciones y perifericos vinculados.
+- Alta y edicion completa de computadoras.
+- Carga privada, descarga y lectura automatica de archivos NFO.
+- Autollenado de modelo, marca y especificaciones comunes desde NFO.
+- Permisos por rol: administrador, soporte y consulta.
+- Bitacora de creacion, actualizacion, eliminacion, login y logout.
+- Eliminacion de computadoras limitada a administradores.
+- Listado, busqueda, alta, edicion y detalle de celulares.
+- Relacion de celulares y perifericos con empleados registrados.
+- Listado, busqueda, alta, edicion y detalle de perifericos.
+- Relacion navegable entre computadoras y perifericos.
+- Adjuntos privados para computadoras, celulares y perifericos, incluyendo archivos historicos.
+- Compartir celulares por WhatsApp con correo, contrasenas y patron para perfiles autorizados.
+- Credenciales de celulares ocultas para perfiles de consulta y protegidas en la bitacora.
+- Directorio de empleados con alta, edicion, detalle, permisos y auditoria.
+- Perfil de empleado con computadoras, celulares y perifericos relacionados.
+- Sincronizacion de nombres heredados cuando cambia el nombre de un empleado.
+- Buscador global para computadoras, celulares, perifericos y empleados.
+- Sugerencias en vivo sin cache y enlaces directos a cada ficha.
+- Codigo QR individual para cada computadora con acceso protegido a su perfil.
+- Registro auditado de escaneos QR con control para evitar eventos duplicados.
+- Generacion de responsivas PDF con el membrete oficial de Total Ground.
+- Responsivas con campos dinamicos: solo muestran datos disponibles del equipo y su NFO.
+- Copia privada de cada responsiva guardada como archivo adjunto del activo.
 
-## Contributing
+## Siguiente etapa
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+Migrar los modulos restantes y agregar actualizaciones en tiempo real entre equipos conectados.
+# Mejoras de plataforma
 
-## Code of Conduct
+La aplicacion incluye estas integraciones opcionales, sin depender de Vite:
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+- **Alpine.js** se sirve localmente desde `public/js/alpine.min.js` para interacciones pequenas y progresivas.
+- **PWA**: `public/manifest.webmanifest` y `public/sw.js` permiten instalar el inventario en celulares. Para que Chrome muestre la instalacion en la LAN se recomienda HTTPS; en HTTP solo funciona plenamente en `localhost`.
+- **Imagenes WebP/AVIF**: ejecuta `php artisan inventory:optimize-images`. El comando conserva originales y genera derivados cuando PHP tiene GD/AVIF habilitado.
+- **Telescope**: disponible en `/telescope` para desarrollo. Usa `TELESCOPE_ENABLED=true` solo en desarrollo y mantenlo apagado en produccion.
+- **Sentry**: configurado mediante `SENTRY_LARAVEL_DSN`; deja la variable vacia si no se usara. En produccion solo enviara eventos cuando exista un DSN.
+- **Redis**: Predis ya esta instalado. Cuando Redis este encendido, cambia en `.env` `CACHE_STORE=redis`, `SESSION_DRIVER=redis` y `SESSION_STORE=redis`, y limpia la configuracion con `php artisan optimize:clear`.
 
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+No se modifico el flujo de Vite ni se requiere compilar frontend para estas funciones.

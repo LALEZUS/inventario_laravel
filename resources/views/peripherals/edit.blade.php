@@ -1,0 +1,1 @@
+@extends('layouts.app') @section('title','Editar periferico') @section('page-title','Editar periferico') @section('content')<a class="back-link" href="{{ route('peripherals.show',$peripheral) }}">&larr; Volver al detalle</a>@include('peripherals._form')@endsection

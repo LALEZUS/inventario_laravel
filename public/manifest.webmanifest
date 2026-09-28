@@ -1,0 +1,19 @@
+{
+  "name": "Inventario TI Total Ground",
+  "short_name": "Inventario TI",
+  "description": "Gestion de activos y recursos de Total Ground.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f5f7fa",
+  "theme_color": "#e30613",
+  "lang": "es-MX",
+  "icons": [
+    {
+      "src": "images/logo-white.png",
+      "sizes": "any",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
