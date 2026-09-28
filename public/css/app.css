@@ -115,6 +115,7 @@ html[data-theme="dark"] .inventory-toast button:hover { background: #2b1c25; }
 .page-intro p:last-child { margin-bottom: 0; color: var(--muted); }
 .page-intro.compact { align-items: flex-end; }
 .page-actions { display: flex; align-items: center; justify-content: flex-end; gap: 8px; flex-wrap: wrap; }
+.employee-qr { display: block; width: 52px; height: 52px; padding: 3px; border: 1px solid var(--line); border-radius: 6px; background: #fff; }
 .network-notice-menu { position: relative; }
 .network-notice-menu > summary { list-style: none; cursor: pointer; }
 .network-notice-menu > summary::-webkit-details-marker { display: none; }
@@ -2700,4 +2701,3 @@ html[data-theme="dark"] .file-selected-badge {
     border-color: var(--red);
     color: var(--red);
 }
-

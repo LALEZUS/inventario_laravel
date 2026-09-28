@@ -23,6 +23,7 @@ class EmployeeRequest extends FormRequest
             'department' => ['nullable', 'string', 'max:100'],
             'position' => ['nullable', 'string', 'max:100'],
             'email_corporate' => ['nullable', 'email:rfc', 'max:100'],
+            'phone_number' => ['nullable', 'string', 'max:25'],
             'extension' => ['nullable', 'string', 'max:10'],
             'status' => ['required', Rule::in(['Activo', 'Inactivo'])],
             'comments' => ['nullable', 'string'],

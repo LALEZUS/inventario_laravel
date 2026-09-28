@@ -10,6 +10,7 @@ use App\Models\HardwareAsset;
 use App\Models\Peripheral;
 use App\Models\Printer;
 use App\Services\AuditLogger;
+use App\Services\EmployeeQrCode;
 use App\Support\RecentRecords;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -18,7 +19,7 @@ use Illuminate\View\View;
 
 class EmployeeController extends Controller
 {
-    public function index(Request $request): View
+    public function index(Request $request, EmployeeQrCode $qrCode): View
     {
         $this->authorize('viewAny', Employee::class);
         $search = trim((string) $request->query('search'));
@@ -34,7 +35,11 @@ class EmployeeController extends Controller
             ->orderByRaw("CASE WHEN status = 'Activo' THEN 0 ELSE 1 END")
             ->orderBy('full_name'))->paginate(20)->withQueryString();
 
-        return view('employees.index', compact('employees', 'search'));
+        $qrCodes = $employees->getCollection()->mapWithKeys(
+            fn (Employee $employee): array => [$employee->id => $qrCode->dataUri($employee)]
+        );
+
+        return view('employees.index', compact('employees', 'search', 'qrCodes'));
     }
 
     public function create(): View
