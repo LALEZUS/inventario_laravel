@@ -29,7 +29,7 @@ class EmployeeQrCode
             encoding: new Encoding('UTF-8'),
             errorCorrectionLevel: ErrorCorrectionLevel::High,
             size: 360,
-            margin: 12,
+            margin: 4,
             roundBlockSizeMode: RoundBlockSizeMode::Margin,
         );
 
