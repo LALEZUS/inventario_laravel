@@ -14,6 +14,16 @@
     <div class="asset-heading"><p class="eyebrow">Employee profile</p><h2>{{ $employee->full_name }}</h2><p>{{ $employee->position ?: 'Sin puesto' }} &middot; {{ $employee->department ?: 'Sin departamento' }}</p></div>
     <span class="status large {{ $employee->status === 'Inactivo' ? 'status-muted' : '' }}">{{ $employee->status }}</span>
 </section>
+<section class="asset-tools-grid employee-contact-tools">
+    <article class="asset-tool-card qr-tool-card">
+        <div>
+            <p class="eyebrow">Contacto rapido</p>
+            <h2>QR del empleado</h2>
+            <p>Escanea este codigo para guardar el contacto con su nombre, celular y correo.</p>
+        </div>
+        <img src="{{ $employeeQr }}" alt="Codigo QR de contacto de {{ $employee->full_name }}" width="180" height="180">
+    </article>
+</section>
 <section class="detail-grid">
     @foreach([
         'Departamento' => $employee->department,

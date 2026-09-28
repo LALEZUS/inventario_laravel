@@ -58,7 +58,7 @@ class EmployeeController extends Controller
         return redirect()->route('employees.show', $employee)->with('success', 'Empleado registrado correctamente.');
     }
 
-    public function show(Employee $employee): View
+    public function show(Employee $employee, EmployeeQrCode $qrCode): View
     {
         $this->authorize('view', $employee);
         $employee->load([
@@ -73,7 +73,9 @@ class EmployeeController extends Controller
         if (request()->user()->can('viewAudit', $employee)) {
             $auditLogs = AuditLog::where('entity', 'employees')->where('entity_id', (string) $employee->id)->latest('created_at')->limit(20)->get();
         }
-        return view('employees.show', compact('employee', 'auditLogs'));
+        $employeeQr = $qrCode->dataUri($employee);
+
+        return view('employees.show', compact('employee', 'auditLogs', 'employeeQr'));
     }
 
     public function edit(Employee $employee): View
