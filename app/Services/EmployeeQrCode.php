@@ -77,7 +77,7 @@ class EmployeeQrCode
             return $png;
         }
 
-        $padding = 4;
+        $padding = 12;
         $cropLeft = max(0, $left - $padding);
         $cropTop = max(0, $top - $padding);
         $cropRight = min($width - 1, $right + $padding);
