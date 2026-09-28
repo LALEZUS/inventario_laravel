@@ -15,12 +15,6 @@
     <div class="employee-hero-meta"><span class="status {{ $employee->status === 'Inactivo' ? 'status-muted' : '' }}">{{ $employee->status }}</span><small>Ultima actualizacion · {{ $employee->updated_at?->translatedFormat('d M Y, H:i') }}</small></div>
 </section>
 @php
-    $contactText = collect([
-        $employee->full_name,
-        $employee->phone_number ? 'Celular: '.$employee->phone_number : null,
-        $employee->extension ? 'Extension: '.$employee->extension : null,
-        $employee->email_corporate,
-    ])->filter()->implode("\n");
     $inventorySummary = [
         ['label' => 'Computadoras', 'count' => $employee->hardwareAssets->count(), 'icon' => 'bi-laptop'],
         ['label' => 'Celulares', 'count' => $employee->cellphones->count(), 'icon' => 'bi-phone'],
@@ -32,27 +26,13 @@
 <section class="employee-overview-grid">
     <div class="employee-primary-column">
         <section class="employee-section employee-contact-section">
-            <div class="employee-section-heading"><div><p class="eyebrow">Contacto</p><h2>Como localizarlo</h2></div><button class="button button-secondary button-small" type="button" data-copy-contact="{{ e($contactText) }}"><i class="bi bi-copy" aria-hidden="true"></i> <span>Copiar contacto</span></button></div>
+            <div class="employee-section-heading"><div><p class="eyebrow">Contacto</p><h2>Como localizarlo</h2></div></div>
             <div class="employee-contact-list">
                 <div><i class="bi bi-envelope" aria-hidden="true"></i><span>Correo corporativo</span><strong>{{ $employee->email_corporate ?: 'No registrado' }}</strong></div>
                 <div><i class="bi bi-phone" aria-hidden="true"></i><span>Numero de celular</span><strong>{{ $employee->phone_number ?: 'No registrado' }}</strong></div>
                 <div><i class="bi bi-telephone" aria-hidden="true"></i><span>Extension</span><strong>{{ $employee->extension ?: 'No registrada' }}</strong></div>
             </div>
 </section>
-<script>
-    document.querySelector('[data-copy-contact]')?.addEventListener('click', async function () {
-        const button = this;
-        try {
-            await navigator.clipboard.writeText(button.dataset.copyContact);
-            button.innerHTML = '<i class="bi bi-check2" aria-hidden="true"></i> <span>Copiado</span>';
-            setTimeout(() => {
-                button.innerHTML = '<i class="bi bi-copy" aria-hidden="true"></i> <span>Copiar contacto</span>';
-            }, 1600);
-        } catch (error) {
-            button.querySelector('span').textContent = 'No disponible';
-        }
-    });
-</script>
 <section class="employee-section employee-inventory-section">
             <div class="employee-section-heading"><div><p class="eyebrow">Inventario asignado</p><h2>Recursos a su cargo</h2></div><strong class="employee-total-assets">{{ collect($inventorySummary)->sum('count') }}</strong></div>
             <div class="employee-inventory-summary">@foreach($inventorySummary as $item)<div class="employee-inventory-item {{ $item['count'] > 0 ? 'has-items' : '' }}"><i class="bi {{ $item['icon'] }}" aria-hidden="true"></i><strong>{{ $item['count'] }}</strong><span>{{ $item['label'] }}</span></div>@endforeach</div>
