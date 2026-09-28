@@ -29,6 +29,7 @@
         'Departamento' => $employee->department,
         'Puesto' => $employee->position,
         'Correo corporativo' => $employee->email_corporate,
+        'Numero de celular' => $employee->phone_number,
         'Extension' => $employee->extension,
         'Computadoras' => $employee->hardwareAssets->count(),
         'Celulares' => $employee->cellphones->count(),

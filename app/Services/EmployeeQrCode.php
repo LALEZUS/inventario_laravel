@@ -28,8 +28,8 @@ class EmployeeQrCode
             data: $contact,
             encoding: new Encoding('UTF-8'),
             errorCorrectionLevel: ErrorCorrectionLevel::High,
-            size: 180,
-            margin: 8,
+            size: 360,
+            margin: 12,
             roundBlockSizeMode: RoundBlockSizeMode::Margin,
         );
 
