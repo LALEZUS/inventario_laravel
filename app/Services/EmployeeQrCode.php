@@ -77,8 +77,15 @@ class EmployeeQrCode
             return $png;
         }
 
-        $cropped = imagecreatetruecolor($right - $left + 1, $bottom - $top + 1);
-        imagecopy($cropped, $source, 0, 0, $left, $top, imagesx($cropped), imagesy($cropped));
+        $padding = 4;
+        $cropLeft = max(0, $left - $padding);
+        $cropTop = max(0, $top - $padding);
+        $cropRight = min($width - 1, $right + $padding);
+        $cropBottom = min($height - 1, $bottom + $padding);
+        $cropped = imagecreatetruecolor($cropRight - $cropLeft + 1, $cropBottom - $cropTop + 1);
+        $white = imagecolorallocate($cropped, 255, 255, 255);
+        imagefill($cropped, 0, 0, $white);
+        imagecopy($cropped, $source, $left - $cropLeft, $top - $cropTop, $cropLeft, $cropTop, imagesx($cropped), imagesy($cropped));
         ob_start();
         imagepng($cropped);
         $result = (string) ob_get_clean();
